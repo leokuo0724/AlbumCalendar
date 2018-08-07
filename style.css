@@ -59,7 +59,7 @@ h3{
 }
 .calendar-wrapper {
   width:300px;
-  margin: 2.8em auto;
+  margin: 1em auto;
   padding: 1em;
   /* border:1px solid rgb(241, 125, 118); */
   /* border-radius:5px; */
@@ -87,6 +87,12 @@ td.not-current {
   color:#c0c0c0;;
 }
 td.normal {}
+td.normal:hover{
+	color: rgb(241, 125, 118);
+}
+td.active{
+	color: rgb(241, 125, 118);
+}
 td.today {
   font-weight:700;
   /* color:rgb(40,40,59); */

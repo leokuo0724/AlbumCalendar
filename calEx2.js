@@ -15,7 +15,6 @@ var Cal = function(divId) {
   this.currMonth = d.getMonth();
   this.currYear = d.getFullYear();
   this.currDay = d.getDate();
-
 };
 
 // Goes to next month 進行NEXT鍵時
@@ -28,6 +27,8 @@ Cal.prototype.nextMonth = function() {
     this.currMonth = this.currMonth + 1;
   }
   this.showcurr();
+
+	selectDate();
 };
 
 // Goes to previous month 進行PREV
@@ -40,6 +41,8 @@ Cal.prototype.previousMonth = function() {
     this.currMonth = this.currMonth - 1;
   }
   this.showcurr();
+
+	selectDate();
 };
 
 // Show current month
@@ -142,9 +145,47 @@ window.onload = function() {
   getId('btnPrev').onclick = function() {
     c.previousMonth();
   };
+
+	selectDate();
 }
+
+// 點擊日期 td normal today
+function selectDate(){
+	var currentTd = null;
+	var aTd = document.getElementsByTagName('td');
+	var aTdNormal = document.getElementsByClassName('normal');
+	console.log(aTdNormal.length);
+	// console.log(aTd.length);
+	for(var i=0; i<aTdNormal.length; i++){
+		aTdNormal[i].index = i;
+		aTdNormal[i].onclick = function(){
+			currentTd = this.index;
+			changeView();
+		}
+	}
+
+	// 點擊日期改變 title 相冊列表 td顯色
+	function changeView(){
+		// td顯色
+		for(var i=0; i<aTdNormal.length; i++){
+			aTdNormal[i].className = 'normal';
+		}
+		aTdNormal[currentTd].className = 'normal active';
+	}
+}
+
 
 // Get element by id
 function getId(id) {
   return document.getElementById(id);
 }
+
+
+
+// 大標
+var d = new Date();
+var dDay = d.getDay();
+var allDay = ['Sun','Mon','Tue','Wed','Thu','Fri','Sat'];
+var dMonth = d.getMonth();
+var allMonth = ['January', 'February', 'March', 'April', 'May', 'June', 'July', 'August', 'September', 'October', 'November', 'December' ];
+var dDate = d.getDate();
