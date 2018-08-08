@@ -146,6 +146,8 @@ window.onload = function() {
     c.previousMonth();
   };
 
+	// 保存原本標題
+
 	selectDate();
 }
 
@@ -154,23 +156,73 @@ function selectDate(){
 	var currentTd = null;
 	var aTd = document.getElementsByTagName('td');
 	var aTdNormal = document.getElementsByClassName('normal');
-	console.log(aTdNormal.length);
-	// console.log(aTd.length);
+	var oTdToday = document.getElementsByClassName('today')[0];
+	var oTitle = document.getElementsByTagName('h3')[0];
+
+	// 點擊今日以外的其他日期
 	for(var i=0; i<aTdNormal.length; i++){
 		aTdNormal[i].index = i;
 		aTdNormal[i].onclick = function(){
 			currentTd = this.index;
-			changeView();
+			tdNormal();
+			changeTitle();
+		}
+		// 點擊今日，將其他都消除
+		oTdToday.onclick = function(){
+			for(var i=0; i<aTdNormal.length; i++){
+				aTdNormal[i].className = 'normal';
+			}
+
 		}
 	}
 
-	// 點擊日期改變 title 相冊列表 td顯色
-	function changeView(){
-		// td顯色
+	// 點擊改變td顯色
+	function tdNormal(){
 		for(var i=0; i<aTdNormal.length; i++){
 			aTdNormal[i].className = 'normal';
 		}
 		aTdNormal[currentTd].className = 'normal active';
+	}
+	// 點擊日期改變 title
+	function changeTitle(){
+		var aMonthYear = aTd[0].innerHTML.split(" ");
+		var day;
+		var allDay = ['Sun','Mon','Tue','Wed','Thu','Fri','Sat'];
+		var aNotCurrTd = document.getElementsByClassName('not-current');
+		var Num = currentTd + aNotCurrTd.length;
+
+		for(var i=0; i<8; i++){
+			if(Num % 7 == i){
+				if(i == 0){
+					day = allDay[6];
+				} else{
+					day = allDay[i-1];
+				}
+			}
+		}
+		// 決定是st nd rd 還是th
+		var numStr;
+		if((currentTd+1) % 10 ==1){
+			numStr = 'ST';
+		} else if((currentTd+1) % 10 ==2){
+			numStr = 'ND';
+		} else if((currentTd+1) % 10 ==3){
+			numStr = 'RD';
+		} else {
+			numStr = 'TH';
+		}
+
+		oTitle.innerHTML = day +'<br>'+ aMonthYear[0]+' '+(currentTd+1)+numStr;
+	}
+	// 今日日期
+	function getTodayTitle(){
+		var d = new Date();
+		var dDay = d.getDay();
+		var allDay = ['Sun','Mon','Tue','Wed','Thu','Fri','Sat'];
+		var dMonth = d.getMonth();
+		var allMonth = ['January', 'February', 'March', 'April', 'May', 'June', 'July', 'August', 'September', 'October', 'November', 'December' ];
+		var dDate = d.getDate();
+
 	}
 }
 
@@ -179,13 +231,3 @@ function selectDate(){
 function getId(id) {
   return document.getElementById(id);
 }
-
-
-
-// 大標
-var d = new Date();
-var dDay = d.getDay();
-var allDay = ['Sun','Mon','Tue','Wed','Thu','Fri','Sat'];
-var dMonth = d.getMonth();
-var allMonth = ['January', 'February', 'March', 'April', 'May', 'June', 'July', 'August', 'September', 'October', 'November', 'December' ];
-var dDate = d.getDate();
