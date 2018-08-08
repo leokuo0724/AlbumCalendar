@@ -149,6 +149,7 @@ window.onload = function() {
 	// 保存原本標題
 
 	selectDate();
+	getTodayTitle();
 }
 
 // 點擊日期 td normal today
@@ -157,7 +158,10 @@ function selectDate(){
 	var aTd = document.getElementsByTagName('td');
 	var aTdNormal = document.getElementsByClassName('normal');
 	var oTdToday = document.getElementsByClassName('today')[0];
+	var aNotCurrTd = document.getElementsByClassName('not-current');
 	var oTitle = document.getElementsByTagName('h3')[0];
+	// 日期相關參數
+
 
 	// 點擊今日以外的其他日期
 	for(var i=0; i<aTdNormal.length; i++){
@@ -172,7 +176,7 @@ function selectDate(){
 			for(var i=0; i<aTdNormal.length; i++){
 				aTdNormal[i].className = 'normal';
 			}
-
+			getTodayTitle();
 		}
 	}
 
@@ -187,10 +191,13 @@ function selectDate(){
 	function changeTitle(){
 		var aMonthYear = aTd[0].innerHTML.split(" ");
 		var day;
-		var allDay = ['Sun','Mon','Tue','Wed','Thu','Fri','Sat'];
-		var aNotCurrTd = document.getElementsByClassName('not-current');
 		var Num = currentTd + aNotCurrTd.length;
 
+		// 判斷Num，是否比「今天」大
+		if((currentTd+2) > dDate){
+			Num++;
+		}
+		// 判斷星期幾
 		for(var i=0; i<8; i++){
 			if(Num % 7 == i){
 				if(i == 0){
@@ -211,19 +218,39 @@ function selectDate(){
 		} else {
 			numStr = 'TH';
 		}
-
-		oTitle.innerHTML = day +'<br>'+ aMonthYear[0]+' '+(currentTd+1)+numStr;
+		// 填到 h3 的innerHTML
+		if((currentTd+2) > dDate){
+			oTitle.innerHTML = day +'<br>'+ aMonthYear[0]+' '+(currentTd+2)+numStr;
+		}	else{
+			oTitle.innerHTML = day +'<br>'+ aMonthYear[0]+' '+(currentTd+1)+numStr;
+		}
 	}
-	// 今日日期
-	function getTodayTitle(){
-		var d = new Date();
-		var dDay = d.getDay();
-		var allDay = ['Sun','Mon','Tue','Wed','Thu','Fri','Sat'];
-		var dMonth = d.getMonth();
-		var allMonth = ['January', 'February', 'March', 'April', 'May', 'June', 'July', 'August', 'September', 'October', 'November', 'December' ];
-		var dDate = d.getDate();
+}
 
+// 日期全局參數
+var d = new Date();
+var dDay = d.getDay();
+var allDay = ['Sun','Mon','Tue','Wed','Thu','Fri','Sat'];
+var dMonth = d.getMonth();
+var allMonth = ['January', 'February', 'March', 'April', 'May', 'June', 'July', 'August', 'September', 'October', 'November', 'December' ];
+var dDate = d.getDate();
+
+// 獲取今日日期
+function getTodayTitle(){
+	var oTitle = document.getElementsByTagName('h3')[0];
+	var day = allDay[dDay];
+	var month = allMonth[dMonth];
+	var numStr;
+	if(dDate % 10 ==1){
+		numStr = 'ST';
+	} else if(dDate % 10 ==2){
+		numStr = 'ND';
+	} else if(dDate % 10 ==3){
+		numStr = 'RD';
+	} else {
+		numStr = 'TH';
 	}
+	oTitle.innerHTML = day +'<br>'+month+' '+dDate+numStr;
 }
 
 

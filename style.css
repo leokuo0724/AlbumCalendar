@@ -160,7 +160,7 @@ ul li{
 	width: 640px;
 	height: 340px;
 	background: white;
-	margin-top: -15px;
+	margin-top: 15px;
 	border-radius: 7px;
 	opacity: 0;
 	display: block;
