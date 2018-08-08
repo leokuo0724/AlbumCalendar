@@ -28,7 +28,12 @@ Cal.prototype.nextMonth = function() {
   }
   this.showcurr();
 
-	selectDate();
+	if( this.currMonth == dMonth){
+		selectThisMonthToday();
+		displayAlbumList();
+	} else {
+		selectDate();
+	}
 };
 
 // Goes to previous month 進行PREV
@@ -42,7 +47,12 @@ Cal.prototype.previousMonth = function() {
   }
   this.showcurr();
 
-	selectDate();
+	if( this.currMonth == dMonth){
+		selectThisMonthToday();
+		displayAlbumList();
+	} else {
+		selectDate();
+	}
 };
 
 // Show current month
@@ -146,10 +156,11 @@ window.onload = function() {
     c.previousMonth();
   };
 
-	// 保存原本標題
 
-	selectDate();
+	// selectDate();
+	selectThisMonthToday();
 	getTodayTitle();
+	displayAlbumList()
 }
 
 // 點擊日期 td normal today
@@ -162,6 +173,90 @@ function selectDate(){
 	var oTitle = document.getElementsByTagName('h3')[0];
 	// 日期相關參數
 
+	// 點擊今日以外的其他日期
+	for(var i=0; i<aTdNormal.length; i++){
+		aTdNormal[i].index = i;
+		aTdNormal[i].onclick = function(){
+			currentTd = this.index;
+			tdNormal();
+			changeTitle();
+		}
+		// 點擊今日，將其他都消除
+		// oTdToday.onclick = function(){
+		// 	for(var i=0; i<aTdNormal.length; i++){
+		// 		aTdNormal[i].className = 'normal';
+		// 	}
+		// 	getTodayTitle();
+		// }
+	}
+
+	// 點擊改變td顯色
+	function tdNormal(){
+		for(var i=0; i<aTdNormal.length; i++){
+			aTdNormal[i].className = 'normal';
+		}
+		aTdNormal[currentTd].className = 'normal active';
+	}
+	// 點擊日期改變 title
+	function changeTitle(){
+		var aMonthYear = aTd[0].innerHTML.split(" ");
+		var day;
+		var Num = currentTd + aNotCurrTd.length;
+
+		// 判斷Num，是否比「今天」大
+		if((currentTd+2) > dDate){
+			Num++;
+		}
+		// 判斷星期幾
+		for(var i=0; i<8; i++){
+			if(Num % 7 == i){
+				if(i == 0){
+					day = allDay[6];
+				} else{
+					day = allDay[i-1];
+				}
+			}
+		}
+		// 決定是st nd rd 還是th
+		var numStr;
+		if((currentTd+2) > dDate){
+			if((currentTd+2) % 10 ==1){
+				numStr = 'ST';
+			} else if((currentTd+2) % 10 ==2){
+				numStr = 'ND';
+			} else if((currentTd+2) % 10 ==3){
+				numStr = 'RD';
+			} else {
+				numStr = 'TH';
+			}
+		} else {
+			if((currentTd+1) % 10 ==1){
+				numStr = 'ST';
+			} else if((currentTd+1) % 10 ==2){
+				numStr = 'ND';
+			} else if((currentTd+1) % 10 ==3){
+				numStr = 'RD';
+			} else {
+				numStr = 'TH';
+			}
+		}
+		// 填到 h3 的innerHTML
+		if((currentTd+2) > dDate){
+			oTitle.innerHTML = day +'<br>'+ aMonthYear[0]+' '+(currentTd+2)+numStr;
+		}	else{
+			oTitle.innerHTML = day +'<br>'+ aMonthYear[0]+' '+(currentTd+1)+numStr;
+		}
+	}
+}
+
+function selectThisMonthToday(){
+	var currentTd = null;
+	var aTd = document.getElementsByTagName('td');
+	var aTdNormal = document.getElementsByClassName('normal');
+	var oTdToday = document.getElementsByClassName('today')[0];
+	var aNotCurrTd = document.getElementsByClassName('not-current');
+	var oTitle = document.getElementsByTagName('h3')[0];
+	var oAlbum = document.getElementsByClassName('album')[0];
 
 	// 點擊今日以外的其他日期
 	for(var i=0; i<aTdNormal.length; i++){
@@ -170,6 +265,12 @@ function selectDate(){
 			currentTd = this.index;
 			tdNormal();
 			changeTitle();
+			aUl[0].style.display = 'none';
+			oAlbum.style.display = 'none';
+			if(currentTd == 5){
+					aUl[0].style.display = 'block';
+					oAlbum.style.display = 'block';
+			}
 		}
 		// 點擊今日，將其他都消除
 		oTdToday.onclick = function(){
@@ -209,14 +310,26 @@ function selectDate(){
 		}
 		// 決定是st nd rd 還是th
 		var numStr;
-		if((currentTd+1) % 10 ==1){
-			numStr = 'ST';
-		} else if((currentTd+1) % 10 ==2){
-			numStr = 'ND';
-		} else if((currentTd+1) % 10 ==3){
-			numStr = 'RD';
+		if((currentTd+2) > dDate){
+			if((currentTd+2) % 10 ==1){
+				numStr = 'ST';
+			} else if((currentTd+2) % 10 ==2){
+				numStr = 'ND';
+			} else if((currentTd+2) % 10 ==3){
+				numStr = 'RD';
+			} else {
+				numStr = 'TH';
+			}
 		} else {
-			numStr = 'TH';
+			if((currentTd+1) % 10 ==1){
+				numStr = 'ST';
+			} else if((currentTd+1) % 10 ==2){
+				numStr = 'ND';
+			} else if((currentTd+1) % 10 ==3){
+				numStr = 'RD';
+			} else {
+				numStr = 'TH';
+			}
 		}
 		// 填到 h3 的innerHTML
 		if((currentTd+2) > dDate){
@@ -227,6 +340,7 @@ function selectDate(){
 	}
 }
 
+
 // 日期全局參數
 var d = new Date();
 var dDay = d.getDay();
@@ -234,6 +348,10 @@ var allDay = ['Sun','Mon','Tue','Wed','Thu','Fri','Sat'];
 var dMonth = d.getMonth();
 var allMonth = ['January', 'February', 'March', 'April', 'May', 'June', 'July', 'August', 'September', 'October', 'November', 'December' ];
 var dDate = d.getDate();
+// 其他全局參數
+var aUl = document.getElementsByTagName('ul');
+var aTd = document.getElementsByTagName('td');
+var aNotCurrTd = document.getElementsByClassName('not-current');
 
 // 獲取今日日期
 function getTodayTitle(){
@@ -251,6 +369,17 @@ function getTodayTitle(){
 		numStr = 'TH';
 	}
 	oTitle.innerHTML = day +'<br>'+month+' '+dDate+numStr;
+}
+
+// 辨別相冊是哪一天
+function displayAlbumList(){
+	var aGalleryDate;
+	for(var i=0; i<aUl.length; i++){
+		for(var j=0; j<=3; j++){
+			aGalleryDate = aUl[i].title.split('-'); // 有誤，目前僅能釣出其一相冊
+		}
+	}
+	aTd[parseInt(aGalleryDate[2])+6+aNotCurrTd.length].style.color = 'rgb(251, 204, 100)';
 }
 
 

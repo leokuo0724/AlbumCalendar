@@ -147,7 +147,9 @@ tr{
 }
 
 
-
+ul{
+	display: none;
+}
 ul li{
 	list-style-type: none;
 	border-top: 0.8px solid white;
