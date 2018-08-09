@@ -1,0 +1,15 @@
+#box .album .galleryView {
+  width: 600px;
+  height: 280px;
+  overflow: scroll;
+  margin: 10px auto;
+}
+#box .album .galleryView li {
+  display: inline-block;
+}
+#box .album .galleryView li img {
+  width: 180px;
+  margin-right: 10px;
+}
+
+/*# sourceMappingURL=sassStyle.css.map */
